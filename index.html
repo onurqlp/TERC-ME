@@ -28,39 +28,8 @@
   <h1>Yeminli Çeviri Ücretleri</h1>
 </header>
 
-<h2>Evraklar</h2>
-<select id="document">
-  <option value="Pasaport">Pasaport</option>
-  <option value="Kimlik">Kimlik</option>
-  <option value="Doğum Belgesi">Doğum Belgesi</option>
-  <option value="Evlilik Cüzdanı">Evlilik Cüzdanı</option>
-  <option value="Diploma">Diploma</option>
-  <option value="Transkript">Transkript</option>
-  <option value="Çalışma Belgesi">Çalışma Belgesi</option>
-  <option value="Mesleki Tanıtım Belgesi">Mesleki Tanıtım Belgesi</option>
-  <option value="Staj Sertifikası">Staj Sertifikası</option>
-  <option value="Referans Mektubu">Referans Mektubu</option>
-  <option value="Şirket Tüzüğü">Şirket Tüzüğü</option>
-  <option value="Patent Dokümanı">Patent Dokümanı</option>
-  <option value="Kullanım Kılavuzu">Kullanım Kılavuzu</option>
-  <option value="Teknik Rapor">Teknik Rapor</option>
-  <option value="Tıbbi Rapor">Tıbbi Rapor</option>
-  <option value="Reçete">Reçete</option>
-  <option value="Tıbbi Makale">Tıbbi Makale</option>
-  <option value="Akademik Makale">Akademik Makale</option>
-  <option value="Araştırma Projesi">Araştırma Projesi</option>
-  <option value="Denklik Başvuru Formu">Denklik Başvuru Formu</option>
-  <option value="Çalışma ve Oturma İzni">Çalışma ve Oturma İzni</option>
-  <option value="Mahkeme Kararı">Mahkeme Kararı</option>
-</select>
-
-<label for="pages">Sayfa Sayısı:</label>
-<input type="number" id="pages" min="1" value="1">
-
-<button onclick="calculatePrice()">Fiyat Hesapla</button>
 <button onclick="showList()">Liste Göster</button>
 
-<div id="result"></div>
 <div id="price-list" style="margin-top: 20px; display: none;">
   <h2>Çeviri Ücret Listesi</h2>
   <table>
@@ -70,31 +39,11 @@
         <th>Ücret (Sayfa Başı)</th>
       </tr>
     </thead>
-    <tbody>
-      <tr><td>Pasaport</td><td>200 TL</td></tr>
-      <tr><td>Kimlik</td><td>200 TL</td></tr>
-      <tr><td>Doğum Belgesi</td><td>200 TL</td></tr>
-      <tr><td>Evlilik Cüzdanı</td><td>200 TL</td></tr>
-      <tr><td>Diploma</td><td>500 TL</td></tr>
-      <tr><td>Transkript</td><td>500 TL</td></tr>
-      <tr><td>Çalışma Belgesi</td><td>500 TL</td></tr>
-      <tr><td>Mesleki Tanıtım Belgesi</td><td>300 TL</td></tr>
-      <tr><td>Staj Sertifikası</td><td>300 TL</td></tr>
-      <tr><td>Referans Mektubu</td><td>300 TL</td></tr>
-      <tr><td>Şirket Tüzüğü</td><td>500 TL</td></tr>
-      <tr><td>Patent Dokümanı</td><td>300 TL</td></tr>
-      <tr><td>Kullanım Kılavuzu</td><td>300 TL</td></tr>
-      <tr><td>Teknik Rapor</td><td>300 TL</td></tr>
-      <tr><td>Tıbbi Rapor</td><td>500 TL</td></tr>
-      <tr><td>Reçete</td><td>500 TL</td></tr>
-      <tr><td>Tıbbi Makale</td><td>500 TL</td></tr>
-      <tr><td>Akademik Makale</td><td>300 TL</td></tr>
-      <tr><td>Araştırma Projesi</td><td>300 TL</td></tr>
-      <tr><td>Denklik Başvuru Formu</td><td>200 TL</td></tr>
-      <tr><td>Çalışma ve Oturma İzni</td><td>500 TL</td></tr>
-      <tr><td>Mahkeme Kararı</td><td>300 TL</td></tr>
+    <tbody id="sorted-list">
+      <!-- Liste JavaScript ile sıralanacak -->
     </tbody>
   </table>
+  <p style="margin-top: 20px; font-size: 16px;">10 belge veya daha fazlasında %10 indirim, 20 belge veya daha fazlasında %20 indirim uygulanır.</p>
 </div>
 
 <footer>
@@ -103,58 +52,44 @@
 </footer>
 
 <script>
-function calculatePrice() {
-  const prices = {
-    "Pasaport": 200,
-    "Kimlik": 200,
-    "Doğum Belgesi": 200,
-    "Evlilik Cüzdanı": 200,
-    "Diploma": 500,
-    "Transkript": 500,
-    "Çalışma Belgesi": 500,
-    "Mesleki Tanıtım Belgesi": 300,
-    "Staj Sertifikası": 300,
-    "Referans Mektubu": 300,
-    "Şirket Tüzüğü": 500,
-    "Patent Dokümanı": 300,
-    "Kullanım Kılavuzu": 300,
-    "Teknik Rapor": 300,
-    "Tıbbi Rapor": 500,
-    "Reçete": 500,
-    "Tıbbi Makale": 500,
-    "Akademik Makale": 300,
-    "Araştırma Projesi": 300,
-    "Denklik Başvuru Formu": 200,
-    "Çalışma ve Oturma İzni": 500,
-    "Mahkeme Kararı": 300
-  };
-
-  const document = document.getElementById('document').value;
-  const pageCount = parseInt(document.getElementById('pages').value);
-  let pricePerPage = prices[document];
-
-  let totalPrice = pricePerPage * pageCount;
-  let discount = 0;
-
-  if (pageCount >= 20) {
-    discount = 0.2 * totalPrice;
-  } else if (pageCount >= 10) {
-    discount = 0.1 * totalPrice;
-  }
-
-  totalPrice -= discount;
-
-  document.getElementById('result').innerHTML = `
-    <p><strong>Seçilen Belge:</strong> ${document}</p>
-    <p><strong>Sayfa Sayısı:</strong> ${pageCount}</p>
-    <p><strong>Toplam İndirim:</strong> ${discount.toFixed(2)} TL</p>
-    <p><strong>Toplam Fiyat:</strong> ${totalPrice.toFixed(2)} TL</p>
-  `;
-}
-
 function showList() {
+  const prices = [
+    { name: "Pasaport", price: 200 },
+    { name: "Kimlik", price: 200 },
+    { name: "Doğum Belgesi", price: 200 },
+    { name: "Evlilik Cüzdanı", price: 200 },
+    { name: "Diploma", price: 500 },
+    { name: "Transkript", price: 500 },
+    { name: "Çalışma Belgesi", price: 500 },
+    { name: "Mesleki Tanıtım Belgesi", price: 300 },
+    { name: "Staj Sertifikası", price: 300 },
+    { name: "Referans Mektubu", price: 300 },
+    { name: "Şirket Tüzüğü", price: 500 },
+    { name: "Patent Dokümanı", price: 300 },
+    { name: "Kullanım Kılavuzu", price: 300 },
+    { name: "Teknik Rapor", price: 300 },
+    { name: "Tıbbi Rapor", price: 500 },
+    { name: "Reçete", price: 500 },
+    { name: "Tıbbi Makale", price: 500 },
+    { name: "Akademik Makale", price: 300 },
+    { name: "Araştırma Projesi", price: 300 },
+    { name: "Denklik Başvuru Formu", price: 200 },
+    { name: "Çalışma ve Oturma İzni", price: 500 },
+    { name: "Mahkeme Kararı", price: 300 },
+    { name: "CV", price: 200 },
+    { name: "Motivasyon Mektubu", price: 300 },
+    { name: "Başvuru Formu", price: 200 }
+  ];
+
+  prices.sort((a, b) => a.price - b.price);
+
+  const sortedList = document.getElementById('sorted-list');
+  sortedList.innerHTML = prices
+    .map(item => `<tr><td>${item.name}</td><td>${item.price} TL</td></tr>`)
+    .join('');
+
   const priceList = document.getElementById('price-list');
-  priceList.style.display = priceList.style.display === 'none' ? 'block' : 'none';
+  priceList.style.display = 'block';
 }
 </script>
 
